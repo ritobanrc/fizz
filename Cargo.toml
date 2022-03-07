@@ -1,3 +1,3 @@
 [workspace]
-members = ["dim/fizz2d", "dim/fizz3d"]
+members = ["dim/fizz2d", "dim/fizz3d", "crates/*"]
 resolver = "2"

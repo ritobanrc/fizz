@@ -32,7 +32,7 @@ impl<T> std::ops::IndexMut<FaceIndex> for FaceArray<T> {
     }
 }
 
-/// An index used to index into a `FaceArray`. Contains a cell and an associated `axis`. The index
+/// An index used to index into a `FaceArray`. Contains a `cell` and an associated `axis`. The index
 /// represeted is the lower/left face of that cell.
 pub struct FaceIndex {
     pub cell: IV,

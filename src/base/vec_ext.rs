@@ -55,3 +55,21 @@ impl<T: na::Scalar + PartialOrd, const D: usize> VecExtPartialOrd for na::SVecto
         })
     }
 }
+
+/// This trait exists because _certain_ libraries still use tuples for representing vectors, rather
+/// than a special struct or even constant-length arrays.
+pub trait IntoVec<T, const N: usize> {
+    fn into_vec(self) -> na::SVector<T, N>;
+}
+
+impl<T> IntoVec<T, 2> for (T, T) {
+    fn into_vec(self) -> na::Vector2<T> {
+        na::Vector2::new(self.0, self.1)
+    }
+}
+
+impl<T> IntoVec<T, 3> for (T, T, T) {
+    fn into_vec(self) -> na::Vector3<T> {
+        na::Vector3::new(self.0, self.1, self.2)
+    }
+}

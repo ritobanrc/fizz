@@ -8,3 +8,4 @@ pub use array_nd::ArrayNd;
 pub use face_array::{FaceArray, FaceIndex};
 pub use grid::Grid;
 pub use range::Range;
+pub use vec_ext::{IntoVec, VecExtPartialOrd};

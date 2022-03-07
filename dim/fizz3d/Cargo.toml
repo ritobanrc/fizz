@@ -1,10 +1,10 @@
 [package]
-name = "phys3d"
+name = "fizz3d"
 version = "0.1.0"
 edition = "2021"
 
 [lib]
-name = "phys3d"
+name = "fizz3d"
 path = "../../src/lib.rs"
 required-features = ["3d"]
 

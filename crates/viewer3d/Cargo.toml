@@ -1,0 +1,11 @@
+[package]
+name = "viewer3d"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+fizz3d = { path = "../../dim/fizz3d" }
+winit = "0.26.1"
+wgpu = "0.12.0"

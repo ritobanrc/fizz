@@ -2,13 +2,13 @@ use crate::base::Range;
 use crate::math::*;
 
 /// Represents a Grid (Co-located or Staggered) in world space.
-#[derive(serde::Serialize, serde::Deserialize)]
+#[derive(serde::Serialize, serde::Deserialize, Debug, Clone, PartialEq)]
 pub struct Grid {
     /// Represents the world-space domain of the grid.
     pub domain: Range<TV>,
     /// The number of cells in each direction.
     /// Should always by domain.size() / dx, componentwise.
-    pub cells: UV,
+    pub cells: IV,
     /// Size of each grid cell
     /// Not serialized, since it can be calculated from `domain` and `cells`
     #[serde(skip)]
@@ -21,7 +21,7 @@ pub struct Grid {
 
 impl Grid {
     /// Creates a new grid given the number of cells in each direction and the size of the domain.
-    pub fn new(cells: UV, domain: Range<TV>) -> Self {
+    pub fn new(cells: IV, domain: Range<TV>) -> Self {
         let dx = domain.size().component_div(&na::convert::<_, TV>(cells));
         let one_over_dx = TV::from_element(1.).component_div(&dx);
         Self {
@@ -43,13 +43,13 @@ impl Grid {
 
     /// Returns the number of nodes in each direction
     /// This is one greater than the number of cells.
-    pub fn num_nodes(&self) -> UV {
-        self.cells + UV::from_element(1)
+    pub fn num_nodes(&self) -> IV {
+        self.cells + IV::from_element(1)
     }
 
     /// Returns the number of nodes in each direction
     /// This is one greater than the number of cells.
-    pub fn num_cells(&self) -> UV {
+    pub fn num_cells(&self) -> IV {
         self.cells
     }
 
@@ -97,22 +97,4 @@ impl Grid {
     pub fn cell_x(&self, cell: IV) -> TV {
         self.domain.min + (cell.cast::<T>() + TV::from_element(0.5)).component_mul(&self.dx)
     }
-
-    /*
-    pub fn nodes<'a>(&self) -> impl Iterator<Item = UV> + 'a {
-        RangeIterator::new(UV::zeros()..self.num_nodes())
-    }
-
-    pub fn cells<'a>(&self) -> impl Iterator<Item = UV> + 'a {
-        RangeIterator::new(UV::zeros()..self.num_cells())
-    }
-
-    pub fn faces<'a>(&'a self) -> impl Iterator<Item = FaceIndex> + 'a {
-        (0..DIM).flat_map(move |axis| {
-            let start = UV::zeros();
-            let end = self.num_cells() + UV::ith_axis(axis).into_inner();
-            RangeIterator::new(start..end).map(move |cell| FaceIndex { cell, axis })
-        })
-    }
-    */
 }
