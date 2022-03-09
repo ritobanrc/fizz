@@ -29,7 +29,7 @@ impl Context {
 pub async fn main_loop() {
     let mut frame = 0;
 
-    let cells = IV::from_element(100);
+    let cells = IV::from_element(10);
     let min = TV::zeros();
     let max = TV::from_element(1.);
     let grid = Grid::new(cells, Range::new(min, max));

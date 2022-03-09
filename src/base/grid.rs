@@ -1,3 +1,4 @@
+use super::{FaceIndex, RangeIterator};
 use crate::base::Range;
 use crate::math::*;
 
@@ -75,16 +76,17 @@ impl Grid {
     }
 
     /// Index of the nearest cell center
-    pub fn cell_index(&self, x: TV) -> Option<IV> {
+    pub fn cell_index(&self, x: TV) -> IV {
         na::try_convert::<_, IV>(
             (x - self.domain.min)
                 .component_mul(&self.one_over_dx)
                 .map(T::floor),
         )
+        .expect(&format!("Failed to get cell index for {:?}", x))
     }
 
     /// Index of the node to the lower-left
-    pub fn node_lower(&self, x: TV) -> Option<IV> {
+    pub fn node_lower(&self, x: TV) -> IV {
         self.cell_index(x)
     }
 
@@ -96,5 +98,27 @@ impl Grid {
     /// Get the location for a particular cell center
     pub fn cell_x(&self, cell: IV) -> TV {
         self.domain.min + (cell.cast::<T>() + TV::from_element(0.5)).component_mul(&self.dx)
+    }
+
+    /// Returns an iterator over all of the nodes in the grid.
+    pub fn nodes<'a>(&self) -> impl Iterator<Item = IV> + 'a {
+        RangeIterator::new(Range::new(IV::zeros(), self.num_nodes()))
+    }
+
+    /// Returns an iterator over all of the cells in the grid.
+    pub fn cells<'a>(&self) -> impl Iterator<Item = IV> + 'a {
+        RangeIterator::new(Range::new(IV::zeros(), self.num_cells()))
+    }
+
+    /// Returns an iterator over all of the faces in the grid.
+    ///
+    /// Iterates over the faces for each dimension, one at a time (i.e. x-faces, then y-faces, then
+    /// z-faces).
+    pub fn faces<'a>(&'a self) -> impl Iterator<Item = FaceIndex> + 'a {
+        (0..DIM).flat_map(move |axis| {
+            let start = IV::zeros();
+            let end = self.num_cells() + IV::ith_axis(axis).into_inner();
+            RangeIterator::new(Range::new(start, end)).map(move |cell| FaceIndex { cell, axis })
+        })
     }
 }

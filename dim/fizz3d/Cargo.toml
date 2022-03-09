@@ -19,3 +19,5 @@ nalgebra = { version = "0.30.1", features = [ "serde-serialize", "rand"] }
 serde = { version = "1.0.136", features = ["derive"] }
 num = "0.4.0"
 thiserror = "1.0"
+tracing = "0.1"
+smallvec = "1.8"

@@ -32,6 +32,16 @@ impl<T: na::Scalar + na::ClosedSub, const D: usize> Range<na::SVector<T, D>> {
     }
 }
 
+impl<T: na::Scalar + na::ClosedAdd + na::ClosedSub + Copy, const D: usize>
+    Range<na::SVector<T, D>>
+{
+    pub fn thickened(&self, thickness_each_side: T) -> Self {
+        let min = self.min - na::SVector::from_element(thickness_each_side);
+        let max = self.max + na::SVector::from_element(thickness_each_side);
+        Range::new(min, max)
+    }
+}
+
 impl<T: na::Scalar + PartialOrd, const D: usize> Range<na::SVector<T, D>> {
     /// Whether `a` is within the `Range` (returns `true` at the endpoints).
     pub fn contains(&self, a: na::SVector<T, D>) -> bool {

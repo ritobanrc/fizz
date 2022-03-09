@@ -62,6 +62,33 @@ where
     }
 }
 
+impl<T> ArrayNd<T> {
+    pub fn get(&self, idx: IV) -> Option<&T> {
+        if self.domain.contains_half_open(idx) {
+            Some(&self.data[idx.dot(&self.stride) as usize])
+        } else {
+            None
+        }
+    }
+
+    pub fn get_mut(&mut self, idx: IV) -> Option<&mut T> {
+        if self.domain.contains_half_open(idx) {
+            Some(&mut self.data[idx.dot(&self.stride) as usize])
+        } else {
+            None
+        }
+    }
+}
+
+impl<T: Clone> ArrayNd<T> {
+    /// Fills every element of the the array with `val`.
+    pub fn fill(&mut self, val: T) {
+        for i in self.data.iter_mut() {
+            *i = val.clone();
+        }
+    }
+}
+
 /// Calculates the strides for a particular domain size.
 /// The strides are a set of numbers such that the dot product of an index with the stride gives
 /// index into the flattened array.
